@@ -1,0 +1,152 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/*
+  色彩：暖色羊皮纸 + 陶土主色（简历/职业场景：可信、温和、有层次）
+  - 主色 60%：terracotta
+  - 辅助：沙褐、灰绿中性；语义：琥珀（提醒）、翠绿（缓和）、青灰蓝（聚焦环，与暖底协调）
+*/
+:root {
+  /* 略增大圆角：更接近欧美产品常见的「柔和容器」 */
+  --radius: 0.875rem;
+  --background: #f3f1ea;
+  --foreground: #161514;
+  --card: #fbfaf7;
+  --card-foreground: #161514;
+  --popover: #fbfaf7;
+  --popover-foreground: #161514;
+  --primary: #c45d3c;
+  --primary-foreground: #fffdfb;
+  --secondary: #ebe7dc;
+  --secondary-foreground: #45433f;
+  --muted: #e5e1d5;
+  --muted-foreground: #57554e;
+  --accent: #efe9df;
+  --accent-foreground: #161514;
+  --destructive: #b32f2f;
+  --border: #e0dbd0;
+  --input: #e0dbd0;
+  --ring: #3a6f82;
+  --chart-1: #c45d3c;
+  --chart-2: #57554e;
+  --chart-3: #7a756c;
+  --chart-4: #d46b4a;
+  --chart-5: #2c2b29;
+  --sidebar: #fbfaf7;
+  --sidebar-foreground: #161514;
+  --sidebar-primary: #c45d3c;
+  --sidebar-primary-foreground: #fffdfb;
+  --sidebar-accent: #ebe7dc;
+  --sidebar-accent-foreground: #45433f;
+  --sidebar-border: #e0dbd0;
+  --sidebar-ring: #3a6f82;
+}
+
+.dark {
+  --background: #141413;
+  --foreground: #f7f6f2;
+  --card: #2e2d2b;
+  --card-foreground: #f7f6f2;
+  --popover: #2e2d2b;
+  --popover-foreground: #f7f6f2;
+  --primary: #d97854;
+  --primary-foreground: #1a1210;
+  --secondary: #3a3834;
+  --secondary-foreground: #f7f6f2;
+  --muted: #3a3834;
+  --muted-foreground: #b8b4aa;
+  --accent: #353330;
+  --accent-foreground: #f7f6f2;
+  --destructive: #e85d5d;
+  --border: #3f3d39;
+  --input: #3f3d39;
+  --ring: #6ba3b8;
+  --chart-1: #d97854;
+  --chart-2: #b8b4aa;
+  --chart-3: #87867f;
+  --chart-4: #c45d3c;
+  --chart-5: #f7f6f2;
+  --sidebar: #2e2d2b;
+  --sidebar-foreground: #f7f6f2;
+  --sidebar-primary: #d97854;
+  --sidebar-primary-foreground: #1a1210;
+  --sidebar-accent: #3d3d3a;
+  --sidebar-accent-foreground: #faf9f5;
+  --sidebar-border: #3f3d39;
+  --sidebar-ring: #6ba3b8;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply text-foreground font-sans antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    line-height: 1.6;
+    background-color: var(--background);
+    /* 极轻暖色氛围：主色晕影 + 底部略深，增加空间层次（非高饱和渐变） */
+    background-image:
+      radial-gradient(
+        120% 80% at 0% -20%,
+        color-mix(in oklab, var(--primary) 14%, transparent) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        90% 60% at 100% 0%,
+        color-mix(in oklab, var(--ring) 8%, transparent) 0%,
+        transparent 45%
+      ),
+      linear-gradient(180deg, var(--background) 0%, color-mix(in oklab, var(--background) 92%, var(--muted)) 100%);
+  }
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+}
