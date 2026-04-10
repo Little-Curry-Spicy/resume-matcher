@@ -68,12 +68,32 @@
 
 ---
 
+## 服务器部署（Docker Compose）
+
+1. 在仓库根目录复制环境变量模板：  
+   `cp deploy/env.example .env`
+2. 编辑 `.env`，**至少填写 `OPENAI_API_KEY`**（及按需修改 `OPENAI_BASE_URL` / `OPENAI_MODEL`）。
+3. 构建并启动：  
+   `docker compose up -d --build`
+4. 浏览器访问 **`http://<服务器 IP>:3002`**（若要改用其他端口，在 `.env` 里修改 `HTTP_PORT`）。
+
+说明：
+
+- 前端容器内 **Nginx** 提供静态页，并把 **`/resume/*`** 反向代理到后端容器（`POST /resume/analyze`、`POST /resume/polish`），因此构建时默认 **`VITE_API_BASE_URL=/`**，浏览器与 API **同域**，无需再写死后端公网地址。
+- 若你改用外部独立 API 域名，可在 `.env` 中设置 `VITE_API_BASE_URL=https://api.example.com`并自行处理 CORS（当前后端为 `origin: "*"`）。
+
+详见根目录 [`docker-compose.yml`](./docker-compose.yml)、[`deploy/env.example`](./deploy/env.example)。
+
+---
+
 ## 仓库结构（简要）
 
 ```
 resume-matcher/
-├── front/          # 单页应用
-├── backend/        # Nest API
-├── pic1.png … pic5.png   # 界面截图（本文档）
-└── README.md       # 本说明（偏产品功能）
+├── front/              # 单页应用（含 Dockerfile、nginx.conf）
+├── backend/            # Nest API（含 Dockerfile）
+├── deploy/env.example  # Docker 部署用环境变量模板
+├── docker-compose.yml
+├── pic1.png … pic5.png # 界面截图（本文档）
+└── README.md
 ```
