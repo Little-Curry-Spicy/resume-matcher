@@ -1,19 +1,13 @@
-# 宿主机 http://<服务器>:3002 →前端 Nginx:80；/resume/* 反代到 backend:3002
-#
-# cp deploy/env.example .env && 填写 OPENAI_API_KEY
-# docker compose up -d --build
-
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     restart: unless-stopped
+    env_file:
+      - ./backend/.env
     environment:
       PORT: "3002"
-      OPENAI_API_KEY: ${OPENAI_API_KEY:?请在 .env 中设置 OPENAI_API_KEY}
-      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
-      OPENAI_MODEL: ${OPENAI_MODEL:-qwen-plus}
     expose:
       - "3002"
     networks:
@@ -23,15 +17,13 @@ services:
     build:
       context: ./front
       dockerfile: Dockerfile
-      args:
-        # 与 Nginx 同域反代时填 `/`，构建出的前端会请求 `/resume/analyze` 等
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/}
-        VITE_API_KEY: ${VITE_API_KEY:-}
     ports:
       - "3002:80"
     depends_on:
       - backend
     restart: unless-stopped
+    env_file:
+      - ./front/.env
     networks:
       - resume-matcher
 

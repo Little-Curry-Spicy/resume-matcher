@@ -70,19 +70,18 @@
 
 ## 服务器部署（Docker Compose）
 
-1. 在仓库根目录复制环境变量模板：  
-   `cp deploy/env.example .env`
-2. 编辑 `.env`，**至少填写 `OPENAI_API_KEY`**（及按需修改 `OPENAI_BASE_URL` / `OPENAI_MODEL`）。
-3. 构建并启动：  
+1. 编辑 `backend/.env`，**至少填写 `OPENAI_API_KEY`**（及按需修改 `OPENAI_BASE_URL` / `OPENAI_MODEL`）。
+2. 编辑 `front/.env`（Docker 构建前端时会读取该文件，建议设置 `VITE_BASE_PATH=/resume/` 与 `VITE_API_BASE_URL=/resume/api`）。
+3. 在仓库根目录构建并启动：  
    `docker compose up -d --build`
 4. 浏览器访问 **`http://<服务器 IP>:3002`**（端口在 `docker-compose.yml` 的 `frontend.ports` 中配置，默认 `3002:80`）。
 
 说明：
 
-- 前端容器内 **Nginx** 监听80，并把 **`/resume/*`** 反向代理到后端容器 **3002**（`POST /resume/analyze`、`POST /resume/polish`）；构建时默认 **`VITE_API_BASE_URL=/`**，浏览器与 API **同域**。
-- 若你改用外部独立 API 域名，可在 `.env` 中设置 `VITE_API_BASE_URL=https://api.example.com`并自行处理 CORS（当前后端为 `origin: "*"`）。
+- 前端容器内 **Nginx** 监听80：页面从 **`/resume`** 提供；API 通过 **`/resume/api/*`** 反向代理到后端容器 **3002**（对应后端 `POST /resume/analyze`、`POST /resume/polish`）。推荐在 `front/.env` 使用 **`VITE_API_BASE_URL=/resume/api`**，浏览器与 API 同域。
+- 若你改用外部独立 API 域名，可在 `front/.env` 设置 `VITE_API_BASE_URL=https://api.example.com` 并自行处理 CORS（当前后端为 `origin: "*"`）。
 
-详见根目录 [`docker-compose.yml`](./docker-compose.yml)、[`deploy/env.example`](./deploy/env.example)。
+详见根目录 [`docker-compose.yml`](./docker-compose.yml) 与 [`backend/.env.example`](./backend/.env.example)。
 
 ---
 
