@@ -75,11 +75,11 @@
 2. 编辑 `.env`，**至少填写 `OPENAI_API_KEY`**（及按需修改 `OPENAI_BASE_URL` / `OPENAI_MODEL`）。
 3. 构建并启动：  
    `docker compose up -d --build`
-4. 浏览器访问 **`http://<服务器 IP>:3002`**（若要改用其他端口，在 `.env` 里修改 `HTTP_PORT`）。
+4. 浏览器访问 **`http://<服务器 IP>:3002`**（端口在 `docker-compose.yml` 的 `frontend.ports` 中配置，默认 `3002:80`）。
 
 说明：
 
-- 前端容器内 **Nginx** 提供静态页，并把 **`/resume/*`** 反向代理到后端容器（`POST /resume/analyze`、`POST /resume/polish`），因此构建时默认 **`VITE_API_BASE_URL=/`**，浏览器与 API **同域**，无需再写死后端公网地址。
+- 前端容器内 **Nginx** 监听80，并把 **`/resume/*`** 反向代理到后端容器 **3002**（`POST /resume/analyze`、`POST /resume/polish`）；构建时默认 **`VITE_API_BASE_URL=/`**，浏览器与 API **同域**。
 - 若你改用外部独立 API 域名，可在 `.env` 中设置 `VITE_API_BASE_URL=https://api.example.com`并自行处理 CORS（当前后端为 `origin: "*"`）。
 
 详见根目录 [`docker-compose.yml`](./docker-compose.yml)、[`deploy/env.example`](./deploy/env.example)。

@@ -1,11 +1,7 @@
-# Resume Matcher：前端（Nginx + 静态资源）反向代理 API 到后端，浏览器只需访问一个端口。
+# 宿主机 http://<服务器>:3002 →前端 Nginx:80；/resume/* 反代到 backend:3002
 #
-# 使用：
-#   cp deploy/env.example .env
-#   编辑 .env（至少填写 OPENAI_API_KEY）
-#   docker compose up -d --build
-#
-# 默认前端 http://<服务器>:3002 ，API 经同域 /resume/* 转发到容器 backend:3001 。
+# cp deploy/env.example .env && 填写 OPENAI_API_KEY
+# docker compose up -d --build
 
 services:
   backend:
@@ -14,12 +10,12 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      PORT: "3001"
+      PORT: "3002"
       OPENAI_API_KEY: ${OPENAI_API_KEY:?请在 .env 中设置 OPENAI_API_KEY}
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
       OPENAI_MODEL: ${OPENAI_MODEL:-qwen-plus}
     expose:
-      - "3001"
+      - "3002"
     networks:
       - resume-matcher
 
@@ -32,7 +28,7 @@ services:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/}
         VITE_API_KEY: ${VITE_API_KEY:-}
     ports:
-      - "${HTTP_PORT:-3002}:80"
+      - "3002:80"
     depends_on:
       - backend
     restart: unless-stopped
